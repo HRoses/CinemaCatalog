@@ -1,0 +1,55 @@
+[
+    {
+        "id": 3,
+        "name": "Interstellar - The great past",
+        "releaseYear": 2014,
+        "duration": 120
+    },
+    {
+        "id": 4,
+        "name": "star trek beyond the earth",
+        "releaseYear": 2009,
+        "duration": 120
+    },
+    {
+        "id": 5,
+        "name": "John Wick Chapter 4",
+        "releaseYear": 2023,
+        "duration": 140
+    },
+    {
+        "id": 6,
+        "name": "SpiderMan 2",
+        "releaseYear": 2014,
+        "duration": 100
+    },
+    {
+        "id": 7,
+        "name": "Life of Pi",
+        "releaseYear": 2016,
+        "duration": 140
+    },
+    {
+        "id": 8,
+        "name": "Spongebob Squarepants",
+        "releaseYear": 2009
+    },
+    {
+        "id": 9,
+        "name": "Spongebob Squarepants The battle never stops",
+        "releaseYear": 2010,
+        "duration": 120
+    },
+    {
+        "id": 10,
+        "name": "Happy Feet",
+        "releaseYear": 2009,
+        "duration": 70
+    },
+    {
+        "id": 11,
+        "name": "Captain America - The Hero of America",
+        "releaseYear": 2007,
+        "duration": 140
+    }
+]
