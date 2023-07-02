@@ -1,5 +1,7 @@
 // ALL THE ROUTE HANDLERS FUNCTIONS ARE CONTAINED HERE
-// checkId is a middlewarefunction
+// REFER TO MONGOOSE DOCS HERE -- USED IN ALL HTTP METHODS
+// https://mongoosejs.com/docs/api/model.html 
+
 
 const Movie = require('./../Models/movieModel');
 
@@ -107,6 +109,17 @@ exports.updateMovie = async (request, response) => {
 
 
 // 5) DELETE - using ID ` /:id `
-exports.deleteMovie = (request, response) => {
-
+exports.deleteMovie = async (request, response) => {
+    try {
+        const movieDeleted = await Movie.findByIdAndDelete(request.params['id'])
+        response.status(200).json({
+            status: 'Success',
+            data: null
+        });
+    } catch (error) {
+        response.status(404).json({
+            status: "Fail",
+            message: err.message
+        });
+    }
 };
