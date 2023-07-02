@@ -17,8 +17,24 @@ const Movie = require('./../Models/movieModel');
 
 
 // 1) GET - /api/v1/movies Syntax: .get(url, routehandler(callback function) )
-exports.getAllMovies = function (request, response) {
-
+exports.getAllMovies = async function (request, response) {
+    try {
+        const movies = await Movie.find();
+        //console.log(movies);
+        response.status(200).json({
+            status: "Success",
+            length: movies.length,
+            data: {
+                movies
+            }
+        });
+    }
+    catch (err) {
+        response.status(404).json({
+            status: "Fail",
+            message: err.message
+        });
+    }
 
 };
 
@@ -51,14 +67,42 @@ exports.createMovie = async (request, response) => {
 
 
 // 3) GET - WITH ROUTING PARAMETERS - /api/v1/movies/id - *:id* is route parameter
-exports.getMovie = (request, response) => {
-
+exports.getMovie = async (request, response) => {
+    try {
+        const movie = await Movie.findById(request.params['id']);
+        //console.log(movie);
+        response.status(200).json({
+            status: "Success",
+            data: {
+                movie
+            }
+        });
+    }
+    catch (err) {
+        response.status(404).json({
+            status: "Fail",
+            message: err.message
+        });
+    }
 };
 
 
 // 4) PATCH - send only partial body data
-exports.updateMovie = (request, response) => {
-
+exports.updateMovie = async (request, response) => {
+    try {
+        const updateMovie = await Movie.findByIdAndUpdate(request.params['id'], request.body, { new: true, runValidators: true });
+        response.status(200).json({
+            status: 'Success',
+            data: {
+                updateMovie
+            }
+        });
+    } catch (error) {
+        response.status(404).json({
+            status: "Fail",
+            message: err.message
+        });
+    }
 };
 
 
