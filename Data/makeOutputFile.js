@@ -46,6 +46,13 @@ const myMovies = [{
 ];
 
 
+
+/*
+    the function below will make a json file
+    called movies.json with the above data. 
+*/
+
+
 const fs = require('fs');
 
 fs.writeFile('./Data/movies.json', JSON.stringify(myMovies), function (err) {
