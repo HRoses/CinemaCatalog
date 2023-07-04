@@ -21,7 +21,16 @@ const Movie = require('./../Models/movieModel');
 // 1) GET - /api/v1/movies Syntax: .get(url, routehandler(callback function) )
 exports.getAllMovies = async function (request, response) {
     try {
-        const movies = await Movie.find();
+        const excludeFields = ['sort', 'page', 'limit', 'fields'];
+        const queryObj = { ...request.query };
+        // console.log(queryObj);
+        excludeFields.forEach((el) => {
+            delete queryObj[el];
+        })
+        // console.log(queryObj);
+
+        
+        const movies = await Movie.find(queryObj);
         //console.log(movies);
         response.status(200).json({
             status: "Success",
@@ -46,6 +55,7 @@ exports.createMovie = async (request, response) => {
     // const testMovie = new Movie({}); 
     // testMovie.save(); 
     try {
+
         // straight to MongoDB Atlas Database
         const movie = await Movie.create(request.body);
         response.status(201).json({
