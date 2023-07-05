@@ -7,6 +7,7 @@
 * Currently implemented routes and connection to MongoDB Atlas
 for HTTP Methods:- GET, POST, PATCH, DELETE 
 * Currently only able to query by movie ID
+* Custom script (--delete/--add) from JSON file to database 
 
 ### Pending: 
 * Advance query such as sort, limit, etc.
