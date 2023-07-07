@@ -19,8 +19,10 @@ const Movie = require('./../Models/movieModel');
 
 
 // 1) GET - /api/v1/movies Syntax: .get(url, routehandler(callback function) )
+// console.log(request.query);  will return objects `key-value pair`
 exports.getAllMovies = async function (request, response) {
     try {
+        /* excludes fields from request.query*/
         const excludeFields = ['sort', 'page', 'limit', 'fields'];
         const queryObj = { ...request.query };
         // console.log(queryObj);
@@ -29,8 +31,24 @@ exports.getAllMovies = async function (request, response) {
         })
         // console.log(queryObj);
 
-        
-        const movies = await Movie.find(queryObj);
+        /*
+        const movieFind = await Movie.find()
+            .where('duration')
+            .equals(request.query.duration)
+            .where('ratings')
+            .equals(request.query.ratings);
+        */
+
+        let queryStr = JSON.stringify(request.query);
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g,
+            (match) => {
+                return `$${match}`
+            }); // replace all occurances of gte... global
+        const queryFixed = JSON.parse(queryStr);
+        console.log(queryFixed);
+
+
+        const movies = await Movie.find(queryFixed);
         //console.log(movies);
         response.status(200).json({
             status: "Success",
