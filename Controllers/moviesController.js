@@ -56,6 +56,7 @@ exports.getAllMovies = async function (request, response) {
             data: {
                 movies
             }
+            
         });
     }
     catch (err) {
