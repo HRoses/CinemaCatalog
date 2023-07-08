@@ -58,4 +58,15 @@ const movieSchema = new mongoose.Schema({
 
 const Movie = mongoose.model('Movie', movieSchema);
 
-module.exports = Movie; 
+module.exports = Movie;
+
+
+
+
+/* Excluding fields from schema to not show to the user
+createdAt: {
+        type: Date,
+        default: Date.now(),
+        select: false       <--------
+    }
+*/ 
