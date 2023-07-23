@@ -18,6 +18,7 @@ app.use((request, response, next) => {
     next();
 });
 
+
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
     // now this information `GET /api/v1/movies/4 200 2.561 ms - 99`

@@ -6,6 +6,8 @@
 const Movie = require('./../Models/movieModel');
 
 
+
+
 // // validateBody is a middleware
 // exports.validateBody = function (request, response, next) {
 //     if (!request.body.name || !request.body.releaseYear) {
@@ -64,9 +66,10 @@ exports.getAllMovies = async function (request, response) {
         //console.log(movies);
         // mongoose sort can only be used on query object
         if (request.query.sort) {
-            // if req query object has a sort property
+            // if req query [object] has a `sort` property(key)
             myQuery = myQuery.sort(request.query.sort);
         } else {
+            //default sort
             myQuery = myQuery.sort('-createdAt');
         }
 
@@ -74,6 +77,7 @@ exports.getAllMovies = async function (request, response) {
         if (request.query.fields) {
             const fields = request.query.fields.split(',').join(' ');
             myQuery.select(fields);
+            // `select` from mongoose query
         } else {
             myQuery.select('-__v'); // do not include this __v (used by mongodb internally)
         }
@@ -85,11 +89,11 @@ exports.getAllMovies = async function (request, response) {
         // Page1: 1-10, Page2: 11-20, Page3: 21-30
         const skip = (page - 1) * limit;
         myQuery = myQuery.skip(skip).limit(limit);
-
-        if(request.query.page){
-            const moviesCount = await Movie.countDocuments(); 
-            if(skip>=moviesCount){
-                throw new Error('This page is not found!'); 
+        // `skip` from mongoose query
+        if (request.query.page) {
+            const moviesCount = await Movie.countDocuments();
+            if (skip >= moviesCount) {
+                throw new Error('This page is not found!');
             }
         }
 
