@@ -4,6 +4,7 @@
 
 
 const Movie = require('./../Models/movieModel');
+const ApiFeatures = require('./../Utils/ApiFeatures'); 
 
 
 
@@ -20,7 +21,7 @@ exports.validateBody = function (request, response, next) {
 };
 */
 
-// A CUSTOM  for highest rated movie get req by prefilling `limit` and `sort` fields
+// A CUSTOM  for highest rated movie get req by prefilling `limit` and `sort` fields using middleware approach 
 // http://127.0.0.1:8080/api/v1/movies/highest-rated
 exports.getHighestRated = (req, res, next) => {
     req.query.limit = '2';
@@ -44,7 +45,8 @@ exports.getAllMovies = async function (request, response) {
 
     // PAGINATION: http://127.0.0.1:8080/api/v1/movies//?page=1&limit=2
     try {
-            let myQuery = Movie.find();        
+            let myQuery = Movie.find(); 
+            const features = new ApiFeatures(myQuery, request.query);        
         
         /* excludes fields from request.query*/
         const excludeFields = ['sort', 'page', 'limit', 'fields'];

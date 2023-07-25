@@ -8,7 +8,7 @@ const moviesController = require('../Controllers/moviesController');
 // 1) express.Router() - custom route handlers
 const moviesRouter = express.Router();
 
-// adding aliasing route
+// adding aliasing route with preset fields for req. 
 moviesRouter.route('/highest-rated').get(moviesController.getHighestRated, moviesController.getAllMovies);
 
 

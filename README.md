@@ -14,6 +14,7 @@ for HTTP Methods:- GET, POST, PATCH, DELETE
 ### Pending: 
 * Advance query such as sort, limit, etc.
 * Front end interface
+* Api Features class
 
 #### Example of Movie Document
 ![movieDocument](https://github.com/HRoses/MVC-Architecture/assets/105571947/a5a969af-6244-42fd-9e60-bdba1be2e8e5)
