@@ -8,12 +8,16 @@ const moviesController = require('../Controllers/moviesController');
 // 1) express.Router() - custom route handlers
 const moviesRouter = express.Router();
 
+// adding aliasing route
+moviesRouter.route('/highest-rated').get(moviesController.getHighestRated, moviesController.getAllMovies);
+
+
 // post method has chaining of middleware to check request body
 // other example: we can also add a validate user method to it
 moviesRouter.route('/')
     .get(moviesController.getAllMovies)
-    .post( moviesController.createMovie); // chaining middlware example
-    
+    .post(moviesController.createMovie); // chaining middlware example
+
 moviesRouter.route('/:id')
     .get(moviesController.getMovie)
     .patch(moviesController.updateMovie)

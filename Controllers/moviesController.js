@@ -7,22 +7,33 @@ const Movie = require('./../Models/movieModel');
 
 
 
+/*
+// validateBody is a middleware
+exports.validateBody = function (request, response, next) {
+    if (!request.body.name || !request.body.releaseYear) {
+        return response.status(400).JSON({
+            status: "Fail",
+            message: "Not Valid Movie Data - Must Have name and releaseYear"
+        });
+    }
+    next();
+};
+*/ 
 
-// // validateBody is a middleware
-// exports.validateBody = function (request, response, next) {
-//     if (!request.body.name || !request.body.releaseYear) {
-//         return response.status(400).JSON({
-//             status: "Fail",
-//             message: "Not Valid Movie Data - Must Have name and releaseYear"
-//         });
-//     }
-//     next();
-// };
-
+ // A CUSTOM  for highest rated movie get req by prefilling `limit` and `sort` fields
+ // http://127.0.0.1:8080/api/v1/movies/highest-rated
+exports.getHighestRated = (req,res, next) =>{
+    req.query.limit = '2';
+    req.query.sort = '-ratings'; 
+    
+    next(); 
+}
 
 // 1) GET - /api/v1/movies Syntax: .get(url, routehandler(callback function) )
 // console.log(request.query);  will return objects `key-value pair`
 exports.getAllMovies = async function (request, response) {
+   
+     
     // SORTING: http://127.0.0.1:8080/api/v1/movies/?sort=-price
     // LIMITING IS CALLED PROJECTION IN MONGODB
     // LIMITING: http://127.0.0.1:8080/api/v1/movies/?fields=name,price,description
@@ -73,7 +84,7 @@ exports.getAllMovies = async function (request, response) {
             myQuery = myQuery.sort('-createdAt');
         }
 
-        /* LIMITING LOGIC */
+        /* LIMITING LOGIC - BY FIELDS*/
         if (request.query.fields) {
             const fields = request.query.fields.split(',').join(' ');
             myQuery.select(fields);

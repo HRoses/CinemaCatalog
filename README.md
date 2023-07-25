@@ -8,6 +8,8 @@
 for HTTP Methods:- GET, POST, PATCH, DELETE 
 * Currently only able to query by movie ID
 * Custom script (--delete/--add) from JSON file to database 
+* Sort, Limit, Pagination, Custom Alias Route Implemented 
+
 
 ### Pending: 
 * Advance query such as sort, limit, etc.
