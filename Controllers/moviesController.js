@@ -18,22 +18,20 @@ exports.validateBody = function (request, response, next) {
     }
     next();
 };
-*/ 
+*/
 
- // A CUSTOM  for highest rated movie get req by prefilling `limit` and `sort` fields
- // http://127.0.0.1:8080/api/v1/movies/highest-rated
-exports.getHighestRated = (req,res, next) =>{
+// A CUSTOM  for highest rated movie get req by prefilling `limit` and `sort` fields
+// http://127.0.0.1:8080/api/v1/movies/highest-rated
+exports.getHighestRated = (req, res, next) => {
     req.query.limit = '2';
-    req.query.sort = '-ratings'; 
-    
-    next(); 
+    req.query.sort = '-ratings';
+
+    next();
 }
 
 // 1) GET - /api/v1/movies Syntax: .get(url, routehandler(callback function) )
 // console.log(request.query);  will return objects `key-value pair`
 exports.getAllMovies = async function (request, response) {
-   
-     
     // SORTING: http://127.0.0.1:8080/api/v1/movies/?sort=-price
     // LIMITING IS CALLED PROJECTION IN MONGODB
     // LIMITING: http://127.0.0.1:8080/api/v1/movies/?fields=name,price,description
@@ -46,6 +44,8 @@ exports.getAllMovies = async function (request, response) {
 
     // PAGINATION: http://127.0.0.1:8080/api/v1/movies//?page=1&limit=2
     try {
+            let myQuery = Movie.find();        
+        
         /* excludes fields from request.query*/
         const excludeFields = ['sort', 'page', 'limit', 'fields'];
         const queryObj = { ...request.query };
@@ -73,7 +73,6 @@ exports.getAllMovies = async function (request, response) {
         // console.log(queryFixed);
 
         /* SORTING LOGIC */
-        let myQuery = Movie.find();
         //console.log(movies);
         // mongoose sort can only be used on query object
         if (request.query.sort) {
