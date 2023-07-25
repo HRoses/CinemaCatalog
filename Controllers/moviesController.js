@@ -4,7 +4,7 @@
 
 
 const Movie = require('./../Models/movieModel');
-const ApiFeatures = require('./../Utils/ApiFeatures'); 
+const ApiFeatures = require('./../Utils/ApiFeatures');
 
 
 
@@ -23,9 +23,9 @@ exports.validateBody = function (request, response, next) {
 
 // A CUSTOM  for highest rated movie get req by prefilling `limit` and `sort` fields using middleware approach 
 // http://127.0.0.1:8080/api/v1/movies/highest-rated
-exports.getHighestRated = (req, res, next) => {
-    req.query.limit = '2';
-    req.query.sort = '-ratings';
+exports.getHighestRated = (request, response, next) => {
+    request.query.limit = '2';
+    request.query.sort = '-ratings';
 
     next();
 }
@@ -33,6 +33,7 @@ exports.getHighestRated = (req, res, next) => {
 // 1) GET - /api/v1/movies Syntax: .get(url, routehandler(callback function) )
 // console.log(request.query);  will return objects `key-value pair`
 exports.getAllMovies = async function (request, response) {
+    /* 
     // SORTING: http://127.0.0.1:8080/api/v1/movies/?sort=-price
     // LIMITING IS CALLED PROJECTION IN MONGODB
     // LIMITING: http://127.0.0.1:8080/api/v1/movies/?fields=name,price,description
@@ -44,10 +45,19 @@ exports.getAllMovies = async function (request, response) {
     //http://127.0.0.1:8080/api/v1/movies/?name=The%20Dark%20Knight 
 
     // PAGINATION: http://127.0.0.1:8080/api/v1/movies//?page=1&limit=2
+  */
     try {
-            let myQuery = Movie.find(); 
-            const features = new ApiFeatures(myQuery, request.query);        
-        
+        let myQuery = Movie.find();
+        // let features = new ApiFeatures(Movie.find(), request.query); 
+
+        //  features.filter(); 
+        //  features.sort(); 
+        //  features.limitFields(); 
+        //  features.paginate(); 
+
+
+
+
         /* excludes fields from request.query*/
         const excludeFields = ['sort', 'page', 'limit', 'fields'];
         const queryObj = { ...request.query };
@@ -55,19 +65,19 @@ exports.getAllMovies = async function (request, response) {
         excludeFields.forEach((el) => {
             delete queryObj[el];
         })
-        // console.log(queryObj);
+        console.log(queryObj);
 
-        /*   using mongoose methods to advance filter by greater than less than
-        const movieFind = await Movie.find()
-            .where('duration')
-            .gte(request.query.duration)
-            .where('ratings')
-            .gte(request.query.ratings);
-        */
-        
-                  
-        /* implemented as filter in ApiFeatures class
-        
+        //   using mongoose methods to advance filter by greater than less than
+        // const movieFind = await Movie.find()
+        //     .where('duration')
+        //     .gte(request.query.duration)
+        //     .where('ratings')
+        //     .gte(request.query.ratings);
+
+
+
+        /* implemented as filter in ApiFeatures class */
+
         // ex: req.query = { duration: { '$gte': '170' } }
         let queryStr = JSON.stringify(request.query);
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g,
@@ -75,10 +85,10 @@ exports.getAllMovies = async function (request, response) {
                 return `$${match}`
             }); // replace all occurances of gte... global
         const queryFixed = JSON.parse(queryStr);
-        // console.log(queryFixed);        
-        */ 
+        console.log(queryFixed);
 
-        
+
+
 
         /* SORTING LOGIC */
         //console.log(movies);
@@ -91,7 +101,9 @@ exports.getAllMovies = async function (request, response) {
             myQuery = myQuery.sort('-createdAt');
         }
 
-        /* LIMITING LOGIC - BY FIELDS*/
+
+
+        /* LIMITING LOGIC - BY FIELDS */
         if (request.query.fields) {
             const fields = request.query.fields.split(',').join(' ');
             myQuery.select(fields);
@@ -101,7 +113,7 @@ exports.getAllMovies = async function (request, response) {
         }
 
 
-        /* PAGINATION LOGIC - MOONGOOSE METHOD https://mongoosejs.com/docs/api/aggregate.html*/
+        /* PAGINATION LOGIC - MOONGOOSE METHOD https://mongoosejs.com/docs/api/aggregate.html */
         const page = request.query.page * 1 || 1; // user specifies page
         const limit = request.query.limit * 1 || 10; // user specifies limit
         // Page1: 1-10, Page2: 11-20, Page3: 21-30
@@ -116,7 +128,7 @@ exports.getAllMovies = async function (request, response) {
         }
 
 
-        const movies = await myQuery;
+        let movies = await myQuery;
         //  const movies = await Movie.find(queryFixed);
 
         response.status(200).json({
