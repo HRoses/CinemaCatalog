@@ -14,5 +14,4 @@ for HTTP Methods:- GET, POST, PATCH, DELETE
 * Front end interface
 
 #### Example of Movie Document
-![movieDocument](https://github.com/HRoses/MVC-Architecture/assets/105571947/f12279f1-63d3-4261-848d-01f5ba798c72)
-
+![movieDocument](https://github.com/HRoses/MVC-Architecture/assets/105571947/a5a969af-6244-42fd-9e60-bdba1be2e8e5)
