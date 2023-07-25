@@ -64,7 +64,10 @@ exports.getAllMovies = async function (request, response) {
             .where('ratings')
             .gte(request.query.ratings);
         */
-
+        
+                  
+        /* implemented as filter in ApiFeatures class
+        
         // ex: req.query = { duration: { '$gte': '170' } }
         let queryStr = JSON.stringify(request.query);
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g,
@@ -72,7 +75,10 @@ exports.getAllMovies = async function (request, response) {
                 return `$${match}`
             }); // replace all occurances of gte... global
         const queryFixed = JSON.parse(queryStr);
-        // console.log(queryFixed);
+        // console.log(queryFixed);        
+        */ 
+
+        
 
         /* SORTING LOGIC */
         //console.log(movies);
