@@ -227,8 +227,6 @@ exports.getMovieByGenre = async function (request, response) {
         })
 
     }
-
-
 };
 
 

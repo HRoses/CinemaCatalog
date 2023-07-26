@@ -10,6 +10,7 @@ for HTTP Methods:- GET, POST, PATCH, DELETE
 * Custom script (--delete/--add) from JSON file to database 
 * Sort, Limit, Pagination, Custom Alias Route Implemented 
 * Aggregation pipeline includes $unwind
+* user who saved movie (currently hardcoded)
 
 ### Endpoints 
 * GetAllMovies = /movies
