@@ -176,4 +176,59 @@ exports.getMovieStats = async (request, response) => {
             message: err.message
         });
     }
-}
+};
+
+// Aggregation: $unwind - destructuring Array 
+// /movies/movie-by-genre/:genre
+exports.getMovieByGenre = async function (request, response) {
+    try {
+        let genreStr = request.params['genre'];
+        genreStr = genreStr.charAt(0).toUpperCase() + genreStr.slice(1,genreStr.length); 
+        console.log(genreStr);
+        const movies = await Movie.aggregate([
+            {
+                $unwind: '$genres'
+            },
+            {
+                $group: {
+                    _id: '$genres',
+                    movieCount: { $sum: 1 },
+                    movies: { $push: '$name' }
+                }
+            },
+            {
+                $addFields: { genre: '$_id' }
+            },
+            {
+                $project: {
+                    _id: 0 // dont want id in movie
+                }
+            },
+            {
+                $sort: { movieCount: -1 }
+            }, 
+            {
+                $match: {genre: genreStr}
+            }
+        ]);
+
+        response.status(200).json({
+            status: 'Success',
+            count: movies.length,
+            data: movies
+
+        });
+
+    } catch (error) {
+
+        response.status(404).json({
+            status: 'Fail',
+            message: error.message
+        })
+
+    }
+
+
+};
+
+

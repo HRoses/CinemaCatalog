@@ -3,12 +3,13 @@
 ### Technology Used: Node JS | Express JS | MongoDB (mongoose)
 
 ### Progress:
-> As of July 25th, 2023
+> As of July 26th, 2023
 * Currently implemented routes and connection to MongoDB Atlas
 for HTTP Methods:- GET, POST, PATCH, DELETE 
 * Currently only able to query by movie ID
 * Custom script (--delete/--add) from JSON file to database 
 * Sort, Limit, Pagination, Custom Alias Route Implemented 
+* Aggregation pipeline includes $unwind
 
 ### Endpoints 
 * GetAllMovies = /movies
@@ -17,12 +18,12 @@ for HTTP Methods:- GET, POST, PATCH, DELETE
 * GetMovieByFields = /movies/?fields=*,*
 * GetMoviePagination = /movies/?page=1&limit=*
 * GetHighestRated = /movies/highest-rated
+* GetMovieByGenre = /movies/movie-by-genre/genre
 * PostMovie = /movies
 * DeleteMovie = /movies/id
 * updateMovie = /movies/id
 
 ### Pending: 
-* Advance query such as sort, limit, etc.
 * Front end interface
 * Api Features class
 * Docs
