@@ -11,6 +11,8 @@ const moviesRouter = express.Router();
 // adding aliasing route with preset fields for req. 
 moviesRouter.route('/highest-rated').get(moviesController.getHighestRated, moviesController.getAllMovies);
 
+// adding aggregation $match movies gte >= 8.9
+moviesRouter.route('/movie-stats').get(moviesController.getMovieStats);
 
 // post method has chaining of middleware to check request body
 // other example: we can also add a validate user method to it

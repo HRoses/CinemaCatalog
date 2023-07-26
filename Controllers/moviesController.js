@@ -6,23 +6,7 @@
 const Movie = require('./../Models/movieModel');
 const ApiFeatures = require('./../Utils/ApiFeatures');
 
-
-
-/*
-// validateBody is a middleware
-exports.validateBody = function (request, response, next) {
-    if (!request.body.name || !request.body.releaseYear) {
-        return response.status(400).JSON({
-            status: "Fail",
-            message: "Not Valid Movie Data - Must Have name and releaseYear"
-        });
-    }
-    next();
-};
-*/
-
-// A CUSTOM  for highest rated movie get req by prefilling `limit` and `sort` fields using middleware approach 
-// http://127.0.0.1:8080/api/v1/movies/highest-rated
+// A middleware to get the highest-rated movies by setting `limit` and `sort` property -> movies/highest-rated
 exports.getHighestRated = (request, response, next) => {
     request.query.limit = '2';
     request.query.sort = '-ratings';
@@ -33,103 +17,15 @@ exports.getHighestRated = (request, response, next) => {
 // 1) GET - /api/v1/movies Syntax: .get(url, routehandler(callback function) )
 // console.log(request.query);  will return objects `key-value pair`
 exports.getAllMovies = async function (request, response) {
-    /* 
-    // SORTING: http://127.0.0.1:8080/api/v1/movies/?sort=-price
-    // LIMITING IS CALLED PROJECTION IN MONGODB
-    // LIMITING: http://127.0.0.1:8080/api/v1/movies/?fields=name,price,description
-
-    // greater than: http://127.0.0.1:8080/api/v1/movies/?duration[gte]=178 
-    // use  const movies = await Movie.find(queryFixed);
-
-    // using simple movies.find(request.query) 
-    //http://127.0.0.1:8080/api/v1/movies/?name=The%20Dark%20Knight 
-
-    // PAGINATION: http://127.0.0.1:8080/api/v1/movies//?page=1&limit=2
-  */
     try {
         let myQuery = Movie.find();
-        // let features = new ApiFeatures(Movie.find(), request.query); 
+        let features = new ApiFeatures(myQuery, request.query)
+            .sort()
+            .limitFields()
+            .paginate();
 
-        //  features.filter(); 
-        //  features.sort(); 
-        //  features.limitFields(); 
-        //  features.paginate(); 
-
-
-
-
-        /* excludes fields from request.query*/
-        const excludeFields = ['sort', 'page', 'limit', 'fields'];
-        const queryObj = { ...request.query };
-        // console.log(queryObj);
-        excludeFields.forEach((el) => {
-            delete queryObj[el];
-        })
-        console.log(queryObj);
-
-        //   using mongoose methods to advance filter by greater than less than
-        // const movieFind = await Movie.find()
-        //     .where('duration')
-        //     .gte(request.query.duration)
-        //     .where('ratings')
-        //     .gte(request.query.ratings);
-
-
-
-        /* implemented as filter in ApiFeatures class */
-
-        // ex: req.query = { duration: { '$gte': '170' } }
-        let queryStr = JSON.stringify(request.query);
-        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g,
-            (match) => {
-                return `$${match}`
-            }); // replace all occurances of gte... global
-        const queryFixed = JSON.parse(queryStr);
-        console.log(queryFixed);
-
-
-
-
-        /* SORTING LOGIC */
-        //console.log(movies);
-        // mongoose sort can only be used on query object
-        if (request.query.sort) {
-            // if req query [object] has a `sort` property(key)
-            myQuery = myQuery.sort(request.query.sort);
-        } else {
-            //default sort
-            myQuery = myQuery.sort('-createdAt');
-        }
-
-
-
-        /* LIMITING LOGIC - BY FIELDS */
-        if (request.query.fields) {
-            const fields = request.query.fields.split(',').join(' ');
-            myQuery.select(fields);
-            // `select` from mongoose query
-        } else {
-            myQuery.select('-__v'); // do not include this __v (used by mongodb internally)
-        }
-
-
-        /* PAGINATION LOGIC - MOONGOOSE METHOD https://mongoosejs.com/docs/api/aggregate.html */
-        const page = request.query.page * 1 || 1; // user specifies page
-        const limit = request.query.limit * 1 || 10; // user specifies limit
-        // Page1: 1-10, Page2: 11-20, Page3: 21-30
-        const skip = (page - 1) * limit;
-        myQuery = myQuery.skip(skip).limit(limit);
-        // `skip` from mongoose query
-        if (request.query.page) {
-            const moviesCount = await Movie.countDocuments();
-            if (skip >= moviesCount) {
-                throw new Error('This page is not found!');
-            }
-        }
-
-
-        let movies = await myQuery;
-        //  const movies = await Movie.find(queryFixed);
+        // omit .filter() - todo: fix pending
+        let movies = await features.query;
 
         response.status(200).json({
             status: "Success",
@@ -233,3 +129,51 @@ exports.deleteMovie = async (request, response) => {
         });
     }
 };
+
+
+// Aggregation pipeline - result of one stage = input of next stage
+// creating statistics about movie. 
+exports.getMovieStats = async (request, response) => {
+    try {
+        // [] contains aggregation states,-> only using `match` and `groupby`
+        // each movie will go throught this aggregation
+        // stage 1- rating over 1 
+        // stage 2- applied on stage 1 
+        // stage 3- applied to stage 2
+        const stats = await Movie.aggregate([
+            {
+                $match: {
+                    ratings: { $gte: 1 }
+                }
+            },
+            {
+                $group: {
+                    _id: '$releaseYear', // try _id:null
+                    avgRating: { $avg: '$ratings' },
+                    avgPrice: { $avg: '$price' },
+                    minPrice: { $min: '$price' },
+                    maxPrice: { $max: '$price' },
+                    priceTotal: { $sum: '$price' },
+                    movieCount: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    minPrice: 1 // asc order
+                }
+            }
+        ]);
+
+        response.status(200).json({
+            status: 'Success',
+            count: stats.length,
+            data: stats
+        });
+
+    } catch (error) {
+        response.status(404).json({
+            status: "Fail",
+            message: err.message
+        });
+    }
+}
