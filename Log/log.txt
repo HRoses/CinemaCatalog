@@ -1,2 +1,18 @@
 New Movie doc with name Test 1 has been created by User_Rose 
 New Movie doc with name Test three has been created by User_Rose 
+New Movie doc with name Future Movie has been created by User_Rose 
+New Movie doc with name Current Movie has been created by User_Rose 
+Query took 57 milliseconds to fetch the documents. 
+Query took 46 milliseconds to fetch the documents. 
+Query took 280 milliseconds to fetch the documents. 
+Query took 30 milliseconds to fetch the documents. 
+Query took 82 milliseconds to fetch the documents. 
+Query took 41 milliseconds to fetch the documents. 
+New Movie doc with name Current Moviesadsdadssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss has been created by User_Rose 
+Query took 36 milliseconds to fetch the documents. 
+Query took 121 milliseconds to fetch the documents. 
+Query took 42 milliseconds to fetch the documents. 
+Query took 32 milliseconds to fetch the documents. 
+Query took 36 milliseconds to fetch the documents. 
+Query took 35 milliseconds to fetch the documents. 
+Query took 51 milliseconds to fetch the documents. 
